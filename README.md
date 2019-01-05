@@ -1,37 +1,40 @@
-## Welcome to GitHub Pages
+# Introducción a aplicaciones estadísticas en R
 
-You can use the [editor on GitHub](https://github.com/jmtoral/Intro-estadistica-R/edit/master/README.md) to maintain and preview the content for your website in Markdown files.
+En este repositorio podrán encontrar todo el material que utilizaremos en el curso. Se irá actualizando constanemente y podrán descargarlo si así lo desean o clonarlo por metio de *GitHub*.
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+## ¿ Cómo instalo `R`?
 
-### Markdown
+Para este curso vamos a trabajar, desde el principio, con código en `R` y vamos a
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
 
-```markdown
-Syntax highlighted code block
+## Objetivo del curso
 
-# Header 1
-## Header 2
-### Header 3
+## Textos, libros y materiales
 
-- Bulleted
-- List
+### Para aprender R
 
-1. Numbered
-2. List
+Hay, realmente, miles de materiales excelentes para aprender `R`. En mi experiencia éstos han sido los más útiles.
 
-**Bold** and _Italic_ and `Code` text
+- [**Wickham y Grolemund** - R for Data Science](https://r4ds.had.co.nz/): Este el libro sagrado de los que usamos `R` a través del `tidyverse`. Es el mejor y más completo libro para aprender a usar en lenguaje. Les recomiendo mucho terminarlo.
 
-[Link](url) and ![Image](src)
-```
+- [Phillips - YaRrr! The Pirate’s Guide to R](https://ndphillips.github.io/piratesguide.html): Una guía introductoria (y bastante divertida) de aprender R. Altamente recomendable también para aprender métodos bayesianos. Yo aprendí `R` con este manual. Phillips también tiene gran material introductorio [en su canal de YouTube](https://www.youtube.com/watch?v=Vkv7-nw3wwU&list=PL9tt3I41HFS9gmeZFEuNrnu_7V_NFngfJ)
+  
+- [Burns - R's Inferno](https://www.burns-stat.com/pages/Tutor/R_inferno.pdf): La premisa del autor es simple "si están usando R y piensas que es un infierno, este libro es para ti".
+- []
 
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
+#### RMarkdown y otras herramientas
 
-### Jekyll Themes
+En este curso se pretende que podamos presentar resultados en reportes profesionales y muy elegantes que puean ser leídos (y usados) por cualquiera. Así, usaremos *Markdown* "con sabor" a `R` para generar código y resultados.
 
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/jmtoral/Intro-estadistica-R/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
+- [Xie, Allaire & Grolemund - R Markdown: The Definitive Guide](https://bookdown.org/yihui/rmarkdown/): La Guía definitiva para usar *Markdown* "con sabor" a R.
+  
+- [A simple guide to LaTeX - Step by Step](https://www.latex-tutorial.com/tutorials/): Si bien no usaremos *LaTeX* directamente, sí es importante tenerlo instalado y conocer su existencia y su sintaxis básica para usarla en *RMarkdown*.
 
-### Support or Contact
+- [Privé - Advanced R Course](https://privefl.github.io/advr38book/index.html) - Un buen libro avanzado sobre el tema.
 
-Having trouble with Pages? Check out our [documentation](https://help.github.com/categories/github-pages-basics/) or [contact support](https://github.com/contact) and we’ll help you sort it out.
+### Para estadística en R
+
+Este curso está construido con base en siguientes materiales:
+
+
+## Repositorios de bases de datos
