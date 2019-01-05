@@ -110,3 +110,10 @@ Algunos repositorios recomendados para buscar buenas bases de datos.
   - Presentación
   - Datos
   
+## Sobre el instructor
+
+Mi nombre es Manuel Toral, actualmente soy investigador especializado en datos en *Mexicanos Contra la Corrupción y la Impunidad*. Estudié Política Pública en la *Escuela Harris de la Universidad de Chicago* y Ciencia Política y Relaciones Internacionales en el *Centro de Investigación y Docencia Económicas*.
+
+Llevo 5 años usando `R` de manera profesional en una diversidad de proyectos de corte inmobiliario, análisis de grandes cantidades de datos, seguridad, justicia y, actualmente, en corrupción, transparencia y combate a la impunidad en México. Puedes ver algo de mis últimos trabajos de investigación con datos en el blog Desarmando la Corrupción de MCCI en alianza con la revista Nexos.
+
+Como docente en `R`, he sido el experto residente de la Escuela Harris de la Universidad de Chicago, en la que dirgí la "STATA and R Bar", que asesoraba en el uso de estas herramientas a alumnos de maestría y doctorado. En 2017, fui contratado por la Unidad de Investigación Aplicada de MCCI para capacitar a sus integrantes en el uso de R, equipo al que finalmente me integré como investigador.
