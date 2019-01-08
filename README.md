@@ -1,6 +1,6 @@
 # Sobre este repositorio
 
-En este repositorio podrán encontrar todo el material que utilizaremos en el curso. Se irá actualizando constanemente y podrán descargarlo si así lo desean o clonarlo por metio de *GitHub*.
+En este repositorio podrán encontrar todo el material que utilizaremos en el curso. Se irá actualizando constanemente y podrán descargarlo si así lo desean o clonarlo por medio de *GitHub*.
 
 ## Objetivo del curso
 
@@ -54,14 +54,26 @@ Es importante tener LaTeX para crear documentos en PDF. Para instalarlo, hay que
 Hay, realmente, miles de materiales excelentes para aprender `R`. En mi experiencia éstos han sido los más útiles.
 
 - [**Wickham y Grolemund** - R for Data Science](https://r4ds.had.co.nz/): Este el libro sagrado de los que usamos `R` a través del `tidyverse`. Es el mejor y más completo libro para aprender a usar en lenguaje. Les recomiendo mucho terminarlo.
+  
+- [Cotton - Learning R A Step-by-Step Function Guide to Data Analysis](http://shop.oreilly.com/product/0636920028352.do)
 
 - [Phillips - YaRrr! The Pirate’s Guide to R](https://ndphillips.github.io/piratesguide.html): Una guía introductoria (y bastante divertida) de aprender R. Altamente recomendable también para aprender métodos bayesianos. Yo aprendí `R` con este manual. Phillips también tiene gran material introductorio [en su canal de YouTube](https://www.youtube.com/watch?v=Vkv7-nw3wwU&list=PL9tt3I41HFS9gmeZFEuNrnu_7V_NFngfJ)
   
 - [Burns - R's Inferno](https://www.burns-stat.com/pages/Tutor/R_inferno.pdf): La premisa del autor es simple "si están usando R y piensas que es un infierno, este libro es para ti".
 
-- [Sebastián Garrido - Recursos para R](http://segasi.com.mx/cursos/recursos_r/recursos/index.html): "Segasi" ha recolectado un montón de recursos introductorios (y no tanto) en su página personal.
-
 - [Privé - Advanced R Course](https://privefl.github.io/advr38book/index.html):Un buen libro avanzado sobre el tema.
+
+### Para resolver (y buscar dudas)
+
+- [Stack Overflow](https://stackoverflow.com/): No hay de otra, **es crucial preguntar**.
+  
+- [Statistical tools for high-throughput data analysis](http://www.sthda.com/english/)
+
+- [UC Business Analytics R Programming Guide](https://uc-r.github.io/)
+  
+- [Prabhakaran - Top 50 ggplot2 Visualizations - The Master List (With Full R Code)](http://r-statistics.co/Top50-Ggplot2-Visualizations-MasterList-R-Code.html)
+  
+- [Sebastián Garrido - Recursos para R](http://segasi.com.mx/cursos/recursos_r/recursos/index.html): "Segasi" ha recolectado un montón de recursos introductorios (y no tanto) en su página personal.
 
 #### RMarkdown y otras herramientas
 
@@ -75,11 +87,16 @@ En este curso se pretende que podamos presentar resultados en reportes profesion
 
 Este curso está construido con base en siguientes materiales:
 
+- [Sheather - A Modern Approach to Regression with R](https://www.springer.com/la/book/9780387096070). El código se encuentra [aquí](https://www.stat.tamu.edu/~sheather/book/).
+
 - [James, et al. -  An Introduction to Statistical Learning with Applications in R](https://www-bcf.usc.edu/~gareth/ISL/). El PDF y el código se encuentran en el link.
 
 - [Bruce & Bruce - Practical Statistics for Data Scientists 50 Essential Concepts](http://shop.oreilly.com/product/0636920048992.do): El código de este libro se encuentra en [este repositorio](https://github.com/andrewgbruce/statistics-for-data-scientists/tree/master/src).
 
 - [Hastie, et al. - The Elements of Statistical Learning](https://web.stanford.edu/~hastie/ElemStatLearn/). El PDF y el código se encuentran en el link.
+  
+- [Teetor - R Cookbook Proven Recipes for Data Analysis, Statistics, and Graphics](http://shop.oreilly.com/product/9780596809164.do)
+  
   
 ## Repositorios de bases de datos
 
@@ -94,7 +111,7 @@ Algunos repositorios recomendados para buscar buenas bases de datos.
 
 ## Calendario de sesiones
 
-- Sesión 1
+- **Sesión 1:**
   - Presentación
   - Datos
   
@@ -112,8 +129,8 @@ Algunos repositorios recomendados para buscar buenas bases de datos.
   
 ## Sobre el instructor
 
-Mi nombre es Manuel Toral, actualmente soy investigador especializado en datos en *Mexicanos Contra la Corrupción y la Impunidad*. Estudié Política Pública en la *Escuela Harris de la Universidad de Chicago* y Ciencia Política y Relaciones Internacionales en el *Centro de Investigación y Docencia Económicas*.
+Mi nombre es Manuel Toral, actualmente soy investigador especializado en datos en *Mexicanos Contra la Corrupción y la Impunidad*. Estudié Política Pública en la *Escuela Harris de la Universidad de Chicago* y Ciencia Política y Relaciones Internacionales en el *Centro de Investigación y Docencia Económicas*. Como instuctor en `R`, soy parte del directorio de instructores de RStudio, [aquí puedes ver mi perfil](https://community.rstudio.com/u/jmtoral/summary).
 
 Llevo 5 años usando `R` de manera profesional en una diversidad de proyectos de corte inmobiliario, análisis de grandes cantidades de datos, seguridad, justicia y, actualmente, en corrupción, transparencia y combate a la impunidad en México. Puedes ver algo de mis últimos trabajos de investigación con datos en el blog Desarmando la Corrupción de MCCI en alianza con la revista Nexos.
 
-Como docente en `R`, he sido el experto residente de la Escuela Harris de la Universidad de Chicago, en la que dirgí la "STATA and R Bar", que asesoraba en el uso de estas herramientas a alumnos de maestría y doctorado. En 2017, fui contratado por la Unidad de Investigación Aplicada de MCCI para capacitar a sus integrantes en el uso de R, equipo al que finalmente me integré como investigador.
+Como docente en `R`, he sido el experto residente de la Escuela Harris de la Universidad de Chicago, en la que dirgí la "STATA and R Bar", que asesoraba en el uso de estas herramientas a alumnos de maestría y doctorado. En 2017, fui contratado por la Unidad de Investigación Aplicada de MCCI para capacitar a sus integrantes en el uso de R, equipo al que finalmente [me integré](https://contralacorrupcion.mx/quienes-somos/) como investigador.
