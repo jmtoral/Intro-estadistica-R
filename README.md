@@ -57,9 +57,9 @@ Hay, realmente, miles de materiales excelentes para aprender `R`. En mi experien
   
 - [Cotton - Learning R A Step-by-Step Function Guide to Data Analysis](http://shop.oreilly.com/product/0636920028352.do)
 
-- [Phillips - YaRrr! The Pirate’s Guide to R](https://ndphillips.github.io/piratesguide.html): Una guía introductoria (y bastante divertida) de aprender R. Altamente recomendable también para aprender métodos bayesianos. Yo aprendí `R` con este manual. Phillips también tiene gran material introductorio [en su canal de YouTube](https://www.youtube.com/watch?v=Vkv7-nw3wwU&list=PL9tt3I41HFS9gmeZFEuNrnu_7V_NFngfJ)
+- [Phillips - YaRrr! The Pirate’s Guide to R](https://ndphillips.github.io/piratesguide.html): Una guía introductoria (y bastante divertida) de aprender `R`. Altamente recomendable también para aprender métodos bayesianos. Yo aprendí `R` con este manual. Phillips también tiene gran material introductorio [en su canal de YouTube](https://www.youtube.com/watch?v=Vkv7-nw3wwU&list=PL9tt3I41HFS9gmeZFEuNrnu_7V_NFngfJ)
   
-- [Burns - R's Inferno](https://www.burns-stat.com/pages/Tutor/R_inferno.pdf): La premisa del autor es simple "si están usando R y piensas que es un infierno, este libro es para ti".
+- [Burns - R's Inferno](https://www.burns-stat.com/pages/Tutor/R_inferno.pdf): La premisa del autor es simple "si estás usando R y piensas que es un infierno, este libro es para ti".
 
 - [Privé - Advanced R Course](https://privefl.github.io/advr38book/index.html):Un buen libro avanzado sobre el tema.
 
@@ -87,6 +87,7 @@ En este curso se pretende que podamos presentar resultados en reportes profesion
 
 Este curso está construido con base en siguientes materiales:
 
+- [Hanck et al. - Introduction to Econometrics with R](https://www.econometrics-with-r.org/1-introduction.html)
 - [Sheather - A Modern Approach to Regression with R](https://www.springer.com/la/book/9780387096070). El código se encuentra [aquí](https://www.stat.tamu.edu/~sheather/book/).
 
 - [James, et al. -  An Introduction to Statistical Learning with Applications in R](https://www-bcf.usc.edu/~gareth/ISL/). El PDF y el código se encuentran en el link.
@@ -112,8 +113,16 @@ Algunos repositorios recomendados para buscar buenas bases de datos.
 ## Calendario de sesiones
 
 - **Sesión 1:**
-  - Presentación
-  - Datos
+  - Temas:
+    - Introducción al uso de `R` y *RStudio*
+    - ¿Cómo llamar datos en formato *.xls*, *.csv*, *.txt* o *.dta*.
+    - Introducción a `tidyverse` (y sus diferencias con `Rbase`)
+    - Introducción a manipulación básica de datos.
+    - Comandos básicos para medidas de tendencia central (y su interpretación)
+    - ¿Cómo hacer tablas profesionales para reportes profesionales?
+  - Material:
+    - Presentación
+    - Datos
   
 - Sesión 2
   - Presentación
