@@ -1,0 +1,1 @@
+{"frames":[{"character_number":0,"end_character_number":0,"end_line_number":0,"file":"","func":"read.dta(\"/home/manuel/Downloads/TrejoLey_CPS_Dataset_Stata13.dta\")","line_number":0}],"message":"Error in read.dta(\"/home/manuel/Downloads/TrejoLey_CPS_Dataset_Stata13.dta\") : \n  not a Stata version 5-12 .dta file\n"}

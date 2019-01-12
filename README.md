@@ -88,6 +88,9 @@ En este curso se pretende que podamos presentar resultados en reportes profesion
 Este curso está construido con base en siguientes materiales:
 
 - [Hanck et al. - Introduction to Econometrics with R](https://www.econometrics-with-r.org/1-introduction.html)
+
+- [Field et a. - Discovering Statistics Using R](https://uk.sagepub.com/en-gb/eur/discovering-statistics-using-r/book236067). Este libro es bastante didactivo, pero un poco infantil para lectorxs más maduros.
+
 - [Sheather - A Modern Approach to Regression with R](https://www.springer.com/la/book/9780387096070). El código se encuentra [aquí](https://www.stat.tamu.edu/~sheather/book/).
 
 - [James, et al. -  An Introduction to Statistical Learning with Applications in R](https://www-bcf.usc.edu/~gareth/ISL/). El PDF y el código se encuentran en el link.
@@ -103,26 +106,35 @@ Este curso está construido con base en siguientes materiales:
 
 Algunos repositorios recomendados para buscar buenas bases de datos.
 
+- [Awesome Public Datasets](https://github.com/awesomedata/awesome-public-datasets)
+- [TidyTuesday Datasets](https://github.com/rfordatascience/tidytuesday)
+- [FiveThirtyEight](https://github.com/rudeboybert/fivethirtyeight)
 - [Las bases de datos del programa de competencias *Kaggle*](https://www.kaggle.com/datasets)
 - [Harvard Dataverse](https://dataverse.harvard.edu/)
 - [Datos abiertos del Gobierno Federal](https://datos.gob.mx/)
+- [Banco de Información del LNPP del CIDE](http://datos.cide.edu/)
 - [Google Dataset Search](https://toolbox.google.com/datasetsearch)
 - [Open ICPSR](https://www.openicpsr.org/openicpsr/)
 - [UK Data Service](http://reshare.ukdataservice.ac.uk/)
+- [Empirical Studies of Conflict](https://esoc.princeton.edu/)
 
 ## Calendario de sesiones
 
 - **Sesión 1:**
   - Temas:
     - Introducción al uso de `R` y *RStudio*
-    - ¿Cómo llamar datos en formato *.xls*, *.csv*, *.txt* o *.dta*.
+
     - Introducción a `tidyverse` (y sus diferencias con `Rbase`)
     - Introducción a manipulación básica de datos.
     - Comandos básicos para medidas de tendencia central (y su interpretación)
     - ¿Cómo hacer tablas profesionales para reportes profesionales?
+    - ¿Cómo llamar datos en formato *.xls*, *.csv*, *.txt* o *.dta*.
   - Material:
-    - Presentación
-    - Datos
+    - Presentación:
+      - Pueden encontrar el *.Rmd* aquí. Como podrán ver en los primeros párrafos del documento. Éste está incompleto, pero al final de la clase tendrá todo lo necesario para servir de referencia. Les recomiendo descargar este archivo o clonar el repo finalizada la sesión. 
+    - Datos:
+      - Usaremos datos de asesinatos perpretados por policías en Estados Unidos de *FiveThirtyEight*.
+      - [Lista de servidores públicos sancionados por la Secretaría de la Función Pública.](http://datosabiertos.funcionpublica.gob.mx/datosabiertos/rsps/ServPubSancionados.csv)
   
 - Sesión 2
   - Presentación

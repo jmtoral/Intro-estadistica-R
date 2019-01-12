@@ -1,0 +1,63 @@
+---
+title: "R Notebook"
+author: "Manuel Toral"
+output:
+  html_document:
+    df_print: paged
+---
+
+# Introducción
+
+¡Bienvenidos a este curso de aplicaciones estadísticas en `R`! La idea de mis cursos siempre es la de mostrar el lado más práctico del uso de lenguajes estadísticos para evitar el abandono de éstos. 
+
+Introducir un repaso de estadística es un reto porque implica el aprendizaje de dos tipos de conocimiento:
+
+a. La sintaxis de un lenguaje.
+b. El uso de una serie de herramientas estadísticas.
+
+## ¿Cómo serán las sesiones?
+
+Siguiendo los consejos de [Brown y Wilson (2018)](https://journals.plos.org/ploscompbiol/article/file?id=10.1371/journal.pcbi.1006023&type=printable), las sesiones comenzarán con una breve introducción y tendrán este material como guía de consulta posterior. Sin embargo, la mayor parte del tiempo haremos *código en vivo*. Es decir, escribiremos en una hoja de *RMarkdown* y podrán ver "en tiempo real" el resultado de su código.
+
+Para cumplir dicho fin, utilizaremos un **lenguaje de marcado** llamado *RMarkdown*. Este lenguaje permite que texto, frómulas matemáticas y códigos convivan para producir documentos profesionales, elegantes y útiles para cumplir los propósitos de *replicabilidad* y *transparencia* en la producción de conocimiento.
+
+La sesión (1) irá como sigue:
+
+
+- Introducción al uso de R y RStudio
+- Introducción a tidyverse (y sus diferencias con Rbase)
+- Introducción a manipulación básica de datos.
+- Comandos básicos para medidas de tendencia central (y su interpretación)
+- ¿Cómo hacer tablas profesionales para reportes profesionales?
+- ¿Cómo llamar mis propios datos en formato .xls, .csv, .txt o .dta.
+
+
+# Uso de *chunks*
+
+## Instalar paquetes
+
+```{r, eval=FALSE}
+install.packages(tidyverse)
+install.packages(foreign)
+```
+
+## Llamar paquetes
+
+```{r}
+library(tidyverse)
+library(foreign)
+library(fivethirtyeight)
+```
+
+
+## Llamar datos
+
+
+```{r}
+
+  
+```
+
+
+
+

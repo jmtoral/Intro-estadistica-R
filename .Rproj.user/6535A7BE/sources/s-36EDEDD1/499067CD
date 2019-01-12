@@ -1,0 +1,22 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1547269689052.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "1587286511",
+    "id" : "499067CD",
+    "lastKnownWriteTime" : 1547302445,
+    "last_content_update" : 1547302446014,
+    "path" : "~/Documents/otros/Intro-estadistica-R/Sesion_1/Sesion1.Rmd",
+    "project_path" : "Sesion_1/Sesion1.Rmd",
+    "properties" : {
+        "cursorPosition" : "31,26",
+        "scrollLine" : "23"
+    },
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}
