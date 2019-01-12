@@ -31,14 +31,72 @@ La sesión (1) irá como sigue:
 - ¿Cómo hacer tablas profesionales para reportes profesionales?
 - ¿Cómo llamar mis propios datos en formato .xls, .csv, .txt o .dta.
 
+# Manos a la obra
 
-# Uso de *chunks*
+## ¿Qué es R? 
+
+Es un lenguaje muy versátil, siempre gratuito y de código abierto que permite que análisis estadísticos, visualizaciones, programación y procesos iterativos convivan en un mismo ecosistema. 
+
+## ¿Por qué debo aprender R?
+
+- Porque permite que organizaciones y personas no dependendan de softwares o servicios costosos para mantener su producción de análisis rigurosos. Además, R permite perseguir valores elementales como la honestidad y la transparencia al permitir un medio relativamente accesible, útil, reproducible y replicable. Además, R permite la recolección, manipulación y comunicación de grandes cantidades de información en poco tiempo y con una curva de aprendizaje relativamente corta.
+
+
+## ¿Cómo puedo pedir ayuda?
+
+1. **Pedir ayuda a R**: Basta con escribir en R el símbolo `?` seguido de aquello que les produzca curiosidad. Por ejemplo:
+
+```{r}
+#?summary()
+#?sum()
+#?plot()
+```
+
+
+Este comando hará que una pequeña pantalla aparezca en la esquina inferior derecha de RStudio explicando la descripción del paquete, su uso (sintaxis), los argumentos que se pueden incluir o modificar, detalles, sugerencias y la parte más importante **LOS EJEMPLOS**.
+
+
+2. **Google**: No es broma ni pretende ofenderles. Cualquier persona, por más experta que sea, pregunta cosas en google como "*[How do I merge two datasets in R?](https://www.statmethods.net/management/merging.html)*", "*[How do I import a `.xls` file in R](https://www.r-bloggers.com/read-excel-files-from-r/)*", o incluso "*[How do I built a convolutional neural network in R for images recognition?](https://www.r-bloggers.com/image-recognition-tutorial-in-r-using-deep-convolutional-neural-networks-mxnet-package/)*". Puse las preguntas en inglés porque, tristemente, es más fácil encontrar información en este diioma. Fuera de eso, todo está al alacance de sus manos. Sólo hay que buscar y, esto es sin ningún afán de ofender, es muy poco probable que su progunta no haya sido resuelta, al menos en este momento de su vida en R. 
+
+3. Los resultados del punto anterior les darán un sinfín de resultados. Sin embargo, hay cuatro fuentes particularmente útiles en R:
+
+- *Quick R* - https://www.statmethods.net/
+
+- *Stack Overflow* - https://stackoverflow.com/
+
+- *Stack Exchange* - https://stackexchange.com/
+
+- *R-Bloggers* - https://www.r-bloggers.com/
+
+- *Revolution Analytics* - http://blog.revolutionanalytics.com/
+
+La idea es que vean cómo resulve la gente sus preguntas y copien esos códigos para adaptarlos a su propio trabajo.
+
+
+
+## RMarkdown
+
+Los documentos que recolectan los resultados de nuestros análisis pueden ser redactados en este tipo de archivos. Los lenguajes de marcado sirven escencialmente para escribir. Sin embargo, existen funciones que nos permiten utilizarlos al máximo y no perder tiempo construyendo un documento en *MSWord* por ejemplo.
+
+## ¿Qué significa "knitear"?
+
+## Uso de *chunks*
+
+Las claves secretas:
+
+- Ctrl + Alt + I o Cmd + Alt + I
+- Ctrl + Shift + M o Cmd + Shift + M
+- Ctrl + Enter
+- Ctrl + Shift + Enter
+
+
 
 ## Instalar paquetes
 
 ```{r, eval=FALSE}
 install.packages(tidyverse)
 install.packages(foreign)
+install.packages(fivethirtyeight)
 ```
 
 ## Llamar paquetes
@@ -54,10 +112,14 @@ library(fivethirtyeight)
 
 
 ```{r}
+data.frame(police_killings)
 
-  
+policia <- data.frame(police_killings)
+
 ```
 
+# Algunas tranformaciones
 
+# Sintaxis
 
-
+## Tipos de datos

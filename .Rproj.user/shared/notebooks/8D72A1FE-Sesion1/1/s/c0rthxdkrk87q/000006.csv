@@ -1,4 +1,0 @@
-"0","vigilantes <- read.dta(""/home/manuel/Downloads/TrejoLey_CPS_Dataset_Stata13.dta"")"
-"2","Error in read.dta(""/home/manuel/Downloads/TrejoLey_CPS_Dataset_Stata13.dta"") : 
-  not a Stata version 5-12 .dta file
-"

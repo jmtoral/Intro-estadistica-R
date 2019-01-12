@@ -1,0 +1,225 @@
+---
+title: "Introducción a Markdown"
+author: "Manuel Toral"
+date: "September 29, 2018"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+# Introducción
+
+Primero lo primero. 
+
+## ¿Qué es R? 
+
+Es un lenguaje muy versátil, siempre gratuito y de código abierto que permite que análisis estadísticos, visualizaciones, programación y procesos iterativos convivan en un mismo ecosistema. 
+
+## ¿Por qué debo aprender R?
+
+- Porque permite que organizaciones y personas no dependendan de softwares o servicios costosos para mantener su producción de análisis rigurosos. Además, R permite perseguir valores elementales como la honestidad y la transparencia al permitir un medio relativamente accesible, útil, reproducible y replicable. Además, R permite la recolección, manipulación y comunicación de grandes cantidades de información en poco tiempo y con una curva de aprendizaje relativamente corta.
+
+
+## ¿Cómo puedo pedir ayuda?
+
+1. **Pedir ayuda a R**: Basta con escribir en R el símbolo `?` seguido de aquello que les produzca curiosidad. Por ejemplo:
+
+```{r}
+#?summary()
+#?sum()
+#?plot()
+```
+
+
+Este comando hará que una pequeña pantalla aparezca en la esquina inferior derecha de RStudio explicando la descripción del paquete, su uso (sintaxis), los argumentos que se pueden incluir o modificar, detalles, sugerencias y la parte más importante **LOS EJEMPLOS**.
+
+
+2. **Google**: No es broma ni pretende ofenderles. Cualquier persona, por más experta que sea, pregunta cosas en google como "*[How do I merge two datasets in R?](https://www.statmethods.net/management/merging.html)*", "*[How do I import a `.xls` file in R](https://www.r-bloggers.com/read-excel-files-from-r/)*", o incluso "*[How do I built a convolutional neural network in R for images recognition?](https://www.r-bloggers.com/image-recognition-tutorial-in-r-using-deep-convolutional-neural-networks-mxnet-package/)*". Puse las preguntas en inglés porque, tristemente, es más fácil encontrar información en este diioma. Fuera de eso, todo está al alacance de sus manos. Sólo hay que buscar y, esto es sin ningún afán de ofender, es muy poco probable que su progunta no haya sido resuelta, al menos en este momento de su vida en R. 
+
+3. Los resultados del punto anterior les darán un sinfín de resultados. Sin embargo, hay cuatro fuentes particularmente útiles en R:
+
+- *Quick R* - https://www.statmethods.net/
+
+- *Stack Overflow* - https://stackoverflow.com/
+
+- *Stack Exchange* - https://stackexchange.com/
+
+- *R-Bloggers* - https://www.r-bloggers.com/
+
+- *Revolution Analytics* - http://blog.revolutionanalytics.com/
+
+La idea es que vean cómo resulve la gente sus preguntas y copien esos códigos para adaptarlos a su propio trabajo.
+
+
+
+# Markdown uso y sintaxis
+
+Antes de seguir con el emocionante mundo de R, es importante concoer la forma de comunicarnos con R y las personas. Este documento lo están leyendo en .pdf, pero en realidad fue escrito en un lenguaje llamado *Markdown*- Iremos aprendiendo poco a poco a usarlo. Por lo mientras, es momento de que abran el archivo con terminación .Rmd (R markdown). Este archivo se abrirá en automático en su RStudio. 
+
+- La cheatsheet de Markdown (https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet) será su guía para escribir documentos en este lenguaje.
+
+Por lo pronto, lo importante es que ven estos cuadro grises que reciben el nombre de "chunks" y se abren escribiendo "```{r}" y se cierran con "```". Dentro de estos recuadros, podrán ir los comandos que necesiten y serán activados con las pequeñas flechas verdes que aparecerán si el chunk está correctamente definido. Prueben por ustedes mismos:
+
+
+# Ahora sí, manos a la obra
+
+## Instalar un paquete
+
+La mayoría de las herramientas de R se encuentran contenidas en una serie de paquetes que pueden instalarse escribiendo los siguiente:
+
+```{r, eval=FALSE}
+install.packages("el_nombre_del_paquete")
+```
+
+Vamos a instalar, por ejemplo, la poderosa paquetería `tidyverse`que, a su vez, tiene otros paquetes increíbles como `ggplot2` y `dplyr` para visualizar y manipular datos, respectivamente. Esto sólo se tiene que hacer una vez.
+
+```{r, eval=FALSE, message=FALSE}
+install.packages("tidyverse")
+install.packages("yarrr") #Este paquete es un creado Phillipsw para aprender R
+```
+
+## Llamar a un paquete
+
+**Todos** los paquetes que usemos necesitan ser llamados previamente, ya sea en nuestro documento .Rmd o en la consola. RStudio precarga los básicos `statistics`, `graphics`, `MASS` y `foreign`, pero estos paquetes cada vez se utilizan menos y sirven como una mera introducción a R. Lo usaremos porque hay muchos que son muy prácticos y útiles para la vida profesional.
+
+Intentemos algo básico. En el paquete `Yarrr` hay una gráfica muy buena que grafica un boxplot y envuelve en un polígono los outliers. Intentémos hacer una:
+
+```{r, eval=FALSE}
+pirateplot(formula = weight ~ Time, 
+           data = ChickWeight,
+           pal = "xmen")
+```
+
+R se queja y nos dice: `could not find function "pirateplot"`. Esto se debe a que no hemos llamado al paquete que recientemente instalamos.
+
+```{r, message=FALSE, warning=FALSE}
+library(yarrr)
+
+pirateplot(formula = weight ~ Time, 
+           data = ChickWeight,
+           pal = "xmen")
+```
+
+Lo que le estamos diciendo a R es que vamos a utilizar la sintaxis y las funciones de la paquetería `Yarrr`. Dentro de esta sintaxis se encuentra la función `pirateplot()` que crea una boxplot como la describimos antes. Literalmente, le estamos diciendo a R que nos haga una "gráfica pirata" del peso de pollitos en el tiempo, usando los datos del peso de los pollitos con la paleta de colores de los "X-men". (Verán que Phillips es un loquilo). Tan sólo vean sus paletas:
+
+```{r}
+piratepal(palette="all")
+```
+
+# Tipos de datos
+
+En R existen una serie de tipos de datos que nos permiten hacer diferentes tipos de cosas. (Les recomiendo dar se una vuelta por el extraordinario curso de Jonathan Cornelissen en DataCamp https://www.datacamp.com/courses/free-introduction-to-r).
+
+1. **Vectores:** Un arreglo unidimensional de datos. EStos pueden ser numericos, de caractreres o logicos.
+
+```{r}
+a <- c(1,2,5.3,6,-2,4) # numerico
+d = c(1,2,3,4,5,6)
+plot(a,d)
+
+b <- c("one","two","three") # caracter
+c <- c(TRUE,TRUE,TRUE,FALSE,TRUE,FALSE) #lógico
+```
+
+```{r, echo=FALSE}
+library(knitr)
+kable(a)
+kable(b)
+kable(c)
+
+```
+
+Se puede llamar a cialquier elemento del vector de este forma:
+
+```{r}
+a[c(1)] # El primer elemento.
+a[c(2,6)] # Los elementos 2 y 6.
+```
+
+**NOTA**: `c(a,b,c)` indica que vamos a iniciar una lista de nuestra petición. Es decir, vamos a usar más de un elemento.
+
+2. **Matrices:** arreglos bidimensionales de datos que pueden contener todo tipo de datos, pero toda la matriz debe contener el mismo tipo.
+
+```{r}
+y<-matrix(1:20, nrow=5,ncol=4)
+```
+
+```{r}
+library(pander)
+pander(y)
+```
+
+
+Literalmente le decimos a R que haga una matriz de los número 1 al 20 ordenadas en 5 filas con 4 columnas.
+
+
+Podemos incluso asignarle nombre a la matriz:
+
+```{r}
+cells <- c(1,26,24,68)
+rnames <- c("R1", "R2")
+cnames <- c("C1", "C2")
+mymatrix <- matrix(cells, nrow=2, ncol=2, byrow=TRUE,
+  dimnames=list(rnames, cnames)) 
+```
+
+```{r}
+kable(mymatrix)
+```
+
+Contruimos una matriz de 2x2 que agrupa los datos del objeto *cells* y le asigna los nombres R1 y R2 a las filas y los nombres C1 y C2 a las columnas.
+
+3. **Factores:** Son categorías como las conocemos: sexo(heteronormado), rango de edad, raza, tipo de espada, estado, puesto.
+
+```{r}
+gender <- c(rep("male",20), rep("female", 30))
+gender <- factor(gender) 
+summary(gender) 
+```
+
+5. **Listas**: Es la estructura más versatil de R, puede tener todo. Las usaremos muy intensivamente porque utilizan muy poco espacio y nos permiten guardar grandes cantidades de datos de todo tipo.
+
+```{r}
+my_list <- list(2,3,4,"bruta", "ciega", "sordomuda", TRUE, FALSE)
+my_list
+```
+
+6. **"Mallas de datos"**: Son el objeto que más vamos a usar. La mayoría de las bases de datos que conocemos se encuentran en este tipo de estructura de datos. 
+
+```{r}
+d <- c(1,2,3,4)
+e <- c("red", "white", "red", NA)
+f <- c(TRUE,TRUE,TRUE,FALSE)
+mydata <- data.frame(d,e,f)
+names(mydata) <- c("ID","Color","Passed") # variable names 
+```
+
+```{r}
+kable(mydata)
+```
+
+A modo de final, usemos la base de sobrevivientes del Titanic para hacer un data frame y vean como R puede leer datos de casi cualquier extension. 
+
+```{r}
+library(readxl)
+titanic <- read_excel("~/Documents/aprendizaje/Curso_MCCI_R/Sesión 1/titanic.xlsx")
+```
+
+```{r}
+pander(head(titanic))
+```
+
+
+```{r}
+pander(head(titanic))
+library(hrbrthemes)
+library(ggthemes)
+
+titanic %>% 
+  ggplot(aes(as.factor(survived), age)) +
+  geom_boxplot() +
+  theme_economist()
+
+
+```
+
