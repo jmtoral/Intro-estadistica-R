@@ -1,0 +1,561 @@
+---
+title: "Scrapeo de iniciativas y votaciones de la Cámara de Diputados"
+author: "Manuel Toral"
+date: "January 17, 2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+# Procesamiento
+
+```{r}
+library(rvest)
+library(tidyverse)
+library(readr)
+library(knitr)
+library(hrbrthemes)
+library(tidytext)
+library(wesanderson)
+```
+
+
+# Scrapeo
+
+
+```{r}
+url <- "http://gaceta.diputados.gob.mx/Gaceta/Votaciones/64/vot64_a1primero.html"
+
+pag <- read_html(url)
+
+links <- pag %>%
+        html_nodes("a") %>%
+        html_attr('href')
+
+links <- as.data.frame(links) %>%
+          filter(grepl("tabla", links)) %>%
+          mutate(links = paste("http://gaceta.diputados.gob.mx", 
+                               links, sep="")) %>%
+        mutate(id = substr(links, 63, 64)) %>% 
+        mutate(id = gsub("\\.","",id))
+```
+
+# A favor
+
+```{r}
+final <- NULL
+bind <-  NULL
+
+for(i in 1:nrow(links)) {
+  
+cat(i, "...")
+  
+url <- links$links[i]
+
+pr <- read_html(url)
+
+id <- links$id[i]
+
+nombre <- pr %>%
+        html_nodes("tr:nth-child(1) td > font font") %>%
+        html_text()
+
+if(length(nombre) == 0) {
+    nombre <- NA 
+}
+
+fecha <- pr %>%
+        html_nodes("font font font") %>%
+        html_text()
+
+if(length(fecha) == 0) {
+    fecha <- NA 
+}  
+
+favor.total <- pr %>%
+        html_nodes("tr:nth-child(3) td:nth-child(2) input") %>%
+        html_attr('value')
+
+if(length(favor.total ) == 0) {
+    favor.total  <- NA 
+}
+
+favor.morena <- pr %>%
+        html_nodes("tr:nth-child(3) td:nth-child(3) input") %>%
+        html_attr('value')
+
+if(length(favor.morena ) == 0) {
+    favor.morena   <- NA 
+}
+
+favor.pan <- pr %>%
+        html_nodes("tr:nth-child(3) td:nth-child(4) input") %>%
+        html_attr('value')
+
+if(length(favor.pan) == 0) {
+    favor.pan   <- NA 
+}
+
+favor.pri <- pr %>%
+        html_nodes("tr:nth-child(3) td:nth-child(5) input") %>%
+        html_attr('value')
+
+if(length(favor.pri) == 0) {
+    favor.pri   <- NA 
+}
+
+favor.pes <- pr %>%
+        html_nodes("tr:nth-child(3) td:nth-child(6) input") %>%
+        html_attr('value')
+
+if(length(favor.pes) == 0) {
+    favor.pes   <- NA 
+}
+
+favor.pt <- pr %>%
+        html_nodes("tr:nth-child(3) td:nth-child(7) input") %>%
+        html_attr('value')
+
+if(length(favor.pt) == 0) {
+    favor.pt   <- NA 
+}
+
+favor.mc <- pr %>%
+        html_nodes("tr:nth-child(3) td:nth-child(8) input") %>%
+        html_attr('value')
+
+if(length(favor.mc) == 0) {
+    favor.mc   <- NA 
+}
+
+favor.prd <- pr %>%
+        html_nodes("tr:nth-child(3) td:nth-child(9) input") %>%
+        html_attr('value')
+
+if(length(favor.prd) == 0) {
+    favor.prd   <- NA 
+}
+
+favor.pvem <- pr %>%
+        html_nodes("tr:nth-child(3) td:nth-child(10) input") %>%
+        html_attr('value')
+
+if(length(favor.pvem) == 0) {
+    favor.pvem   <- NA 
+}
+
+favor.sp <- pr %>%
+        html_nodes("tr:nth-child(3) td:nth-child(11) input") %>%
+        html_attr('value')
+
+if(length(favor.sp) == 0) {
+    favor.sp   <- NA 
+}
+
+bind <- cbind(id,nombre, fecha, favor.total, favor.morena, favor.pan, favor.pri,
+              favor.pes, favor.pt, favor.mc, favor.prd, favor.pvem, favor.sp)
+
+final <- as.data.frame(rbind(final, bind))
+
+}
+
+favor <- final %>%
+  filter(as.character(nombre) != as.character(fecha)) %>% 
+  mutate(nombre = gsub("Oprima sobre el número para obtener la lista de diputados", "", nombre)) %>%
+  mutate(fecha = gsub("Oprima sobre el número para obtener la lista de diputados", "", fecha))
+```
+
+
+# Contra
+
+```{r}
+final <- NULL
+bind <-  NULL
+
+for(i in 1:nrow(links)) {
+  
+cat(i, "...")
+  
+url <- links$links[i]
+
+pr <- read_html(url)
+
+id <- links$id[i]
+
+nombre <- pr %>%
+        html_nodes("tr:nth-child(1) td > font font") %>%
+        html_text()
+
+if(length(nombre) == 0) {
+    nombre <- NA 
+}
+
+fecha <- pr %>%
+        html_nodes("font font font") %>%
+        html_text()
+
+if(length(fecha) == 0) {
+    fecha <- NA 
+}  
+
+contra.total <- pr %>%
+        html_nodes("tr:nth-child(4) td:nth-child(2) input") %>%
+        html_attr('value')
+
+if(length(contra.total ) == 0) {
+    contra.total  <- NA 
+}
+
+contra.morena <- pr %>%
+        html_nodes("tr:nth-child(4) td:nth-child(3) input") %>%
+        html_attr('value')
+
+if(length(contra.morena ) == 0) {
+    contra.morena   <- NA 
+}
+
+contra.pan <- pr %>%
+        html_nodes("tr:nth-child(4) td:nth-child(4) input") %>%
+        html_attr('value')
+
+if(length(contra.pan) == 0) {
+    contra.pan   <- NA 
+}
+
+contra.pri <- pr %>%
+        html_nodes("tr:nth-child(4) td:nth-child(5) input") %>%
+        html_attr('value')
+
+if(length(contra.pri) == 0) {
+    contra.pri   <- NA 
+}
+
+contra.pes <- pr %>%
+        html_nodes("tr:nth-child(4) td:nth-child(6) input") %>%
+        html_attr('value')
+
+if(length(contra.pes) == 0) {
+    contra.pes   <- NA 
+}
+
+contra.pt <- pr %>%
+        html_nodes("tr:nth-child(4) td:nth-child(7) input") %>%
+        html_attr('value')
+
+if(length(contra.pt) == 0) {
+    contra.pt   <- NA 
+}
+
+contra.mc <- pr %>%
+        html_nodes("tr:nth-child(4) td:nth-child(8) input") %>%
+        html_attr('value')
+
+if(length(contra.mc) == 0) {
+    contra.mc   <- NA 
+}
+
+contra.prd <- pr %>%
+        html_nodes("tr:nth-child(4) td:nth-child(9) input") %>%
+        html_attr('value')
+
+if(length(contra.prd) == 0) {
+    contra.prd   <- NA 
+}
+
+contra.pvem <- pr %>%
+        html_nodes("tr:nth-child(4) td:nth-child(10) input") %>%
+        html_attr('value')
+
+if(length(contra.pvem) == 0) {
+    contra.pvem   <- NA 
+}
+
+contra.sp <- pr %>%
+        html_nodes("tr:nth-child(4) td:nth-child(11) input") %>%
+        html_attr('value')
+
+if(length(contra.sp) == 0) {
+    contra.sp   <- NA 
+}
+
+bind <- cbind(id,nombre, fecha, contra.total, contra.morena, contra.pan, contra.pri,
+              contra.pes, contra.pt, contra.mc, contra.prd, contra.pvem, contra.sp)
+
+final <- as.data.frame(rbind(final, bind))
+
+}
+
+contra <- final %>%
+  filter(as.character(nombre) != as.character(fecha)) %>% 
+  mutate(nombre = gsub("Oprima sobre el número para obtener la lista de diputados", "", nombre)) %>%
+  mutate(fecha = gsub("Oprima sobre el número para obtener la lista de diputados", "", fecha))
+```
+
+
+# Absolver
+
+```{r}
+final <- NULL
+bind <-  NULL
+
+for(i in 1:nrow(links)) {
+  
+cat(i, "...")
+  
+url <- links$links[i]
+
+pr <- read_html(url)
+
+id <- links$id[i]
+
+nombre <- pr %>%
+        html_nodes("tr:nth-child(1) td > font font") %>%
+        html_text()
+
+if(length(nombre) == 0) {
+    nombre <- NA 
+}
+
+fecha <- pr %>%
+        html_nodes("font font font") %>%
+        html_text()
+
+if(length(fecha) == 0) {
+    fecha <- NA 
+}  
+
+abs.total <- pr %>%
+        html_nodes("tr:nth-child(5) td:nth-child(2) input") %>%
+        html_attr('value')
+
+if(length(abs.total ) == 0) {
+    abs.total  <- NA 
+}
+
+abs.morena <- pr %>%
+        html_nodes("tr:nth-child(5) td:nth-child(3) input") %>%
+        html_attr('value')
+
+if(length(abs.morena ) == 0) {
+    abs.morena   <- NA 
+}
+
+abs.pan <- pr %>%
+        html_nodes("tr:nth-child(5) td:nth-child(4) input") %>%
+        html_attr('value')
+
+if(length(abs.pan) == 0) {
+    abs.pan   <- NA 
+}
+
+abs.pri <- pr %>%
+        html_nodes("tr:nth-child(5) td:nth-child(5) input") %>%
+        html_attr('value')
+
+if(length(abs.pri) == 0) {
+    abs.pri   <- NA 
+}
+
+abs.pes <- pr %>%
+        html_nodes("tr:nth-child(5) td:nth-child(6) input") %>%
+        html_attr('value')
+
+if(length(abs.pes) == 0) {
+    abs.pes   <- NA 
+}
+
+abs.pt <- pr %>%
+        html_nodes("tr:nth-child(5) td:nth-child(7) input") %>%
+        html_attr('value')
+
+if(length(abs.pt) == 0) {
+    abs.pt   <- NA 
+}
+
+abs.mc <- pr %>%
+        html_nodes("tr:nth-child(5) td:nth-child(8) input") %>%
+        html_attr('value')
+
+if(length(abs.mc) == 0) {
+    abs.mc   <- NA 
+}
+
+abs.prd <- pr %>%
+        html_nodes("tr:nth-child(5) td:nth-child(9) input") %>%
+        html_attr('value')
+
+if(length(abs.prd) == 0) {
+    abs.prd   <- NA 
+}
+
+abs.pvem <- pr %>%
+        html_nodes("tr:nth-child(5) td:nth-child(10) input") %>%
+        html_attr('value')
+
+if(length(abs.pvem) == 0) {
+    abs.pvem   <- NA 
+}
+
+abs.sp <- pr %>%
+        html_nodes("tr:nth-child(5) td:nth-child(11) input") %>%
+        html_attr('value')
+
+if(length(abs.sp) == 0) {
+    abs.sp   <- NA 
+}
+
+bind <- cbind(id,nombre, fecha, abs.total, abs.morena, abs.pan, abs.pri,
+              abs.pes, abs.pt, abs.mc, abs.prd, abs.pvem, abs.sp)
+
+final <- as.data.frame(rbind(final, bind))
+
+}
+
+abs <- final %>%
+  filter(as.character(nombre) != as.character(fecha)) %>% 
+  mutate(nombre = gsub("Oprima sobre el número para obtener la lista de diputados", "", nombre)) %>%
+  mutate(fecha = gsub("Oprima sobre el número para obtener la lista de diputados", "", fecha))
+```
+
+# Ausentes
+
+```{r}
+final <- NULL
+bind <-  NULL
+
+for(i in 1:nrow(links)) {
+  
+cat(i, "...")
+  
+url <- links$links[i]
+
+pr <- read_html(url)
+
+id <- links$id[i]
+
+nombre <- pr %>%
+        html_nodes("tr:nth-child(1) td > font font") %>%
+        html_text()
+
+if(length(nombre) == 0) {
+    nombre <- NA 
+}
+
+fecha <- pr %>%
+        html_nodes("font font font") %>%
+        html_text()
+
+if(length(fecha) == 0) {
+    fecha <- NA 
+}  
+
+ausentes.total <- pr %>%
+        html_nodes("tr:nth-child(7) td:nth-child(2) input") %>%
+        html_attr('value')
+
+if(length(ausentes.total ) == 0) {
+    ausentes.total  <- NA 
+}
+
+ausentes.morena <- pr %>%
+        html_nodes("tr:nth-child(7) td:nth-child(3) input") %>%
+        html_attr('value')
+
+if(length(ausentes.morena ) == 0) {
+    ausentes.morena   <- NA 
+}
+
+ausentes.pan <- pr %>%
+        html_nodes("tr:nth-child(7) td:nth-child(4) input") %>%
+        html_attr('value')
+
+if(length(ausentes.pan) == 0) {
+    ausentes.pan   <- NA 
+}
+
+ausentes.pri <- pr %>%
+        html_nodes("tr:nth-child(7) td:nth-child(5) input") %>%
+        html_attr('value')
+
+if(length(ausentes.pri) == 0) {
+    ausentes.pri   <- NA 
+}
+
+ausentes.pes <- pr %>%
+        html_nodes("tr:nth-child(7) td:nth-child(6) input") %>%
+        html_attr('value')
+
+if(length(ausentes.pes) == 0) {
+    ausentes.pes   <- NA 
+}
+
+ausentes.pt <- pr %>%
+        html_nodes("tr:nth-child(7) td:nth-child(7) input") %>%
+        html_attr('value')
+
+if(length(ausentes.pt) == 0) {
+    ausentes.pt   <- NA 
+}
+
+ausentes.mc <- pr %>%
+        html_nodes("tr:nth-child(7) td:nth-child(8) input") %>%
+        html_attr('value')
+
+if(length(ausentes.mc) == 0) {
+    ausentes.mc   <- NA 
+}
+
+ausentes.prd <- pr %>%
+        html_nodes("tr:nth-child(7) td:nth-child(9) input") %>%
+        html_attr('value')
+
+if(length(ausentes.prd) == 0) {
+    ausentes.prd   <- NA 
+}
+
+ausentes.pvem <- pr %>%
+        html_nodes("tr:nth-child(7) td:nth-child(10) input") %>%
+        html_attr('value')
+
+if(length(ausentes.pvem) == 0) {
+    ausentes.pvem   <- NA 
+}
+
+ausentes.sp <- pr %>%
+        html_nodes("tr:nth-child(7) td:nth-child(11) input") %>%
+        html_attr('value')
+
+if(length(ausentes.sp) == 0) {
+    ausentes.sp   <- NA 
+}
+
+bind <- cbind(id, nombre, fecha, ausentes.total, ausentes.morena, ausentes.pan, ausentes.pri,
+              ausentes.pes, ausentes.pt, ausentes.mc, ausentes.prd, ausentes.pvem, ausentes.sp)
+
+final <- as.data.frame(rbind(final, bind))
+
+}
+
+ausentes <- final %>%
+  filter(as.character(nombre) != as.character(fecha)) %>% 
+  mutate(nombre = gsub("Oprima sobre el número para obtener la lista de diputados", "", nombre)) %>%
+  mutate(fecha = gsub("Oprima sobre el número para obtener la lista de diputados", "", fecha))
+```
+
+
+
+# Unir 64
+
+```{r}
+L64 <-  cbind(favor, contra, abs, ausentes)
+L64 <- L64[-c(40,41,42,14,15,16,27,28,29)]
+L64[-c(1:3)] <- sapply(L64[-c(1:3)], as.character)
+L64[-c(1:3)] <- sapply(L64[-c(1:3)], as.numeric)
+L64 <- as.tibble(L64)
+L64$nombre <- trimws(L64$nombre)
+L64
+```
+

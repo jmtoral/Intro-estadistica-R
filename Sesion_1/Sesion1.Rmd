@@ -1,5 +1,5 @@
 ---
-title: "R Notebook"
+title: "Sesión 1"
 author: "Manuel Toral"
 output:
   html_document:
@@ -118,8 +118,5 @@ policia <- data.frame(police_killings)
 
 ```
 
-# Algunas tranformaciones
 
-# Sintaxis
 
-## Tipos de datos

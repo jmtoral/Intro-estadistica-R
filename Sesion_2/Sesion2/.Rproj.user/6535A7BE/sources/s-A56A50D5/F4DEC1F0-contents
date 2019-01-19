@@ -1,0 +1,123 @@
+---
+title: "Sesion 2"
+author: "Manuel Toral"
+date: "January 19, 2019"
+output:
+  html_document: default
+  pdf_document: default
+  word_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
+```
+
+```{r librerias}
+library(tidyverse)
+library(knitr)
+library(pander)
+library(hrbrthemes)
+library(ggthemes)
+library(fivethirtyeight)
+library(foreign) #DBF
+library(readstata13) #STATA13 +
+library(readr) #CSV
+library(readxl) #EXCEL
+#library(RODBC)
+```
+
+
+
+# Llamar los datos
+
+```{r}
+police <- read_csv("police.csv")
+```
+
+# Explorar
+
+```{r}
+pander(summary(police))
+```
+
+
+
+## Select
+
+```{r}
+police %>%
+  select(county_id, name, county_income) %>% 
+  summary() %>% 
+  pander()
+
+police %>%
+  select(county_id, name, county_income) %>% 
+  summary() %>% 
+  write.csv("tabla.csv")
+```
+
+
+## Filter
+
+```{r}
+police %>% 
+  filter(raceethnicity == "Hispanic/Latino" &
+         armed == "Firearm" | 
+         armed == "Vehicle") %>% 
+  pander()
+```
+
+## Filter + Select
+
+```{r}
+police %>% 
+  filter(raceethnicity == "Hispanic/Latino") %>% 
+  filter(armed == "Firearm" | 
+         armed == "Vehicle") %>% 
+  select(raceethnicity, armed) %>% 
+  pander()
+```
+
+
+## Group by + summarise
+
+```{r}
+police %>% 
+  group_by(state) %>% 
+  summarise(media = mean(county_income))
+```
+
+# Group by + arrange
+
+```{r}
+police %>% 
+  group_by(state, county_id, county_income, pop) %>% 
+  summarise(count = n()) %>% 
+  arrange(-count)
+```
+
+# Mutate
+
+```{r}
+police %>% 
+  group_by(state, county_id, county_income) %>% 
+  summarise(count = n(),
+            pop = sum(pop, na.rm =  TRUE)) %>% 
+  ungroup() %>% 
+  mutate(tasa = (count/pop)*100000) %>% 
+  arrange(-tasa) %>% 
+  filter(pop > 0)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+

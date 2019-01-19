@@ -118,18 +118,5 @@ policia <- data.frame(police_killings)
 
 ```
 
-# Algunas tranformaciones
 
-# Sintaxis
-
-## Tipos de datos
-
-# Tendencia central
-
-## Media
-
-
-```{r}
-
-```
 

@@ -1,0 +1,7 @@
+"0","police %>% "
+"0","  group_by(state, county_id, county_income, pop) %>% "
+"0","  summarise(count = n()) %>% "
+"0","  ungroup() %>% "
+"0","  mutate(tasa = (count/pop)*100000) %>% "
+"0","  arrange(-tasa) %>% "
+"0","  filter(pop > 0)"

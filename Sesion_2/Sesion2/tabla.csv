@@ -1,0 +1,7 @@
+"","  county_id","    name","county_income"
+"","Min.   : 1003  ","Length:467        ","Min.   : 22545  "
+"","1st Qu.: 8022  ","Class :character  ","1st Qu.: 43804  "
+"","Median :24033  ","Mode  :character  ","Median : 50856  "
+"","Mean   :25434  ",NA,"Mean   : 52527  "
+"","3rd Qu.:40112  ",NA,"3rd Qu.: 56832  "
+"","Max.   :56005  ",NA,"Max.   :110292  "

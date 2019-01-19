@@ -1,0 +1,24 @@
+---
+title: "Sesión 2"
+author: "Manuel Toral"
+date: "January 18, 2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+# Librerías
+
+
+# Manipulaciones de datos
+
+# Medidas de tendencia central
+
+## Median
+## Mean
+## Trim mean
+
+# ¿Cómo hacer una regresión?
