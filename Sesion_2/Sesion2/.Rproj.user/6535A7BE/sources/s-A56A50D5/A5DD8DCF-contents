@@ -1,0 +1,915 @@
+---
+title: "Moreno"
+author: 'Manuel Toral'
+date: "January 3, 2019"
+output:
+  pdf_document: default
+  word_document: default
+  latex_document: default
+---
+
+# Objetivo
+
+Este `.Rmd` describe el trabajo que se hizo para crear las variables necesarias para el estudio.
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message=FALSE, warning = FALSE)
+```
+
+# Librerías
+
+```{r}
+library(readr)
+library(foreign)
+library(tidyverse)
+library(sjlabelled)
+library(pander)
+library(knitr)
+library(scales)
+library(stargazer)
+library(ggcorrplot)
+require(aod)
+```
+
+# Datos
+
+Importamos los datos directamente del archivo `.sav` para mantener las etiquetas. Hicimos un codebook con esas etiquetas.
+
+```{r}
+
+#d12 <- read_csv("data2012.csv")
+#d18 <- read_csv("data2018.csv")
+
+d12 <- read.spss("CNEPMX2012.sav", to.data.frame=TRUE)
+d18 <- read.spss("CNEP_MEXICO2018.sav", to.data.frame=TRUE)
+
+# Codebooks
+cb12 <- as.data.frame(attr(d12, "variable.labels"))
+cb18 <- as.data.frame(attr(d18, "variable.labels"))
+
+```
+
+
+# Modelo General
+
+$$Y = \beta_0 + \beta_1 X_1 + \beta_2 \text{Identificación}_k + \beta_3 \text{Situación}_i + 
+\delta_1 \text{Características}_m + \delta_2 \text{Entidad}_n + \delta_3 \text{Urbano}_o + \delta_4 \text{Año}_p $$
+
+
+# Limpieza y tratamiento
+
+## Definir variables
+
+
+```{r select}
+subset12 <- d12 %>% 
+            rowid_to_column(var = "id") %>% 
+              mutate(yr = 2012) %>% # 1. Año de la muestra
+              select(id,yr, 
+                     edad = pc,
+                     sexo = pb,
+                     #eua = p112,
+                     educ = p148,
+                     ent = cve_enti,
+                     crimen = p63a,  # 2. Variables situación
+                     economia = p63b,
+                     pobreza = p63c,
+                     corrupcion = p63d, 
+                     votop = p6,
+                     aprueba = p62,
+                     idpartido = p71,
+                     inclinapart = p72,
+                     infointernet = p12d, #Medios
+                     infoperiodicos = p12a, #Medios
+                     inforadio = p12c, #Medios
+                     infotv = p12b, #Medios
+                     inforedes= p12e, #Medios
+                     internet = p28,
+                     interes = p3,
+                     sectorpub = p151,
+                     jefehog = p156,
+                     benefopor = p161, 
+                     opepn = p97b,
+                     opjosefina = p97a,
+                     opamlo = p97c,
+                     opsaliente = p97e) %>% 
+              remove_all_labels() # Remover labes
+
+subset18 <-  d18 %>% 
+            rowid_to_column(var = "id") %>%
+              mutate(yr = 2018) %>%  # 1. Año de la muestra
+              select(id,yr,
+                     opanaya = p9a,
+                     edad = pC,
+                     sexo = pB,
+                     #eua = p133,
+                     educ = p144,
+                     ent = Est,
+                     crimen = p88a,  # 2. Variables situación
+                     economia = p88b,
+                     pobreza = p88c,
+                     corrupcion = p88d, 
+                     votop = p4,
+                     aprueba = p87,
+                     idpartido = p94,
+                     inclinapart = p95,
+                     infointernet = p11a, #Medios
+                     infoperiodicos = p11b, #Medios
+                     inforadio = p11c, #Medios
+                     infotv = p11d, #Medios
+                     inforedes= p11e, #Medios
+                     internet=p30,
+                     interes = p2,
+                     sectorpub = p147,
+                     jefehog = p152,
+                     benefopor = p155,
+                     opepn = p112a,
+                     opamlo = p9c,
+                     opmeade = p9b) %>% 
+              mutate(opsaliente = opepn) %>% 
+              remove_all_labels()  # Remover labels
+```
+
+## Descriptivos subset
+
+### 2012
+
+```{r}
+pander(summary(subset12))
+```
+
+### 2018
+
+```{r}
+pander(summary(subset18))
+```
+
+# Recodificar 2012
+
+```{r}
+base_recode_12 <- subset12 %>% 
+  mutate(internet = recode(internet, 
+                           "Sí" = "1",
+                           "No" = "0",
+                           "NS/NC" = NA_character_)) %>% 
+  mutate(sexo = recode(sexo, 
+                           "Femenino" = "1",
+                           "Masculino" = "0",
+                           "NS/NC" = NA_character_)) %>% 
+  mutate(educ = recode(educ, 
+                        "Ninguno" = "0",
+                        "Primaria terminada" = "1",
+                        "Primaria incompleta" = "1",
+                        "Secundaria no terminada" = "2",
+                        "Secundaria terminada"= "2",
+                        "Preparatoria o equivalente" = "3",
+                        "Universidad sin terminar" = "4",
+                        "Universidad terminada" = "4", 
+                        "Posgrado" = "4",
+                        "NS/NC" = NA_character_)) %>% 
+  mutate(votop = recode(votop, 
+                        "Vázquez Mota/PAN" = "1",
+                        "López Obrador/PRD" = "2",
+                        "López Obrador/PT" = "2",
+                        "López Obrador/Movimiento Ciudadano" = "2",
+                        "CC PRD" = "2",
+                        "Peña Nieto/PVEM" = "3",
+                        "Peña Nieto/PRI" = "3",
+                        "CC PRI" = "3",
+                        "Gabriel Quadri/Nueva Alianza" = "4",
+                        "NS/NC" = NA_character_)) %>%         
+  mutate_at(c("crimen","economia", "pobreza", "corrupcion"),
+            funs(recode(., "Muy bien"= 1, 
+                           "Bien"= 1, 
+                           "Regular" = 0,
+                           "Mal" = 0,
+                           "Muy mal" = 0)))  %>% 
+  mutate(aprueba = recode(aprueba, 
+                           "Aprueba totalmente" = "1",
+                          "Aprueba algo" = "1",
+                           "Desaprueba totalmente" = "0",
+                          "Desaprueba algo" = "0",
+                           "NS/NC" = NA_character_)) %>% 
+  mutate_at(c("infointernet","infoperiodicos", "inforadio", "infotv", "inforedes"),
+            funs(recode(.,"Nunca" = "0",
+                          "Todos los días o casi todos los días" = "1",
+                          "Uno o dos días por semana" = "1",
+                          "Tres o cuatro días por semana" = "1",
+                          "Con menor frecuencia" = "0",
+                           "NS/NC" = NA_character_)))  %>% 
+  mutate(idpri = idpartido == "Muy priista" |
+                  idpartido == "Algo priista"|
+                  inclinapart == "PRI", 
+         idpan = idpartido == "Muy panista" |
+                  idpartido == "Algo panista"|
+                  inclinapart == "PAN",
+         idprd = idpartido == "Muy perredista" |
+                  idpartido == "Algo perredista"|
+                  inclinapart == "PRD",
+         idotro = idpartido == "Otro" |
+                  inclinapart == "Otro",
+         idninguno = idpartido == "Ninguno" |
+                  inclinapart == "Ninguno",
+         idmorena = idpartido == "Morena")  %>%         
+      mutate_at(c("idpri","idpan", "idprd", "idotro", "idninguno",
+                  "idmorena"),
+            funs(as.numeric)) %>% 
+  mutate(jefehog = recode(jefehog, 
+                           "Público" = "1",
+                           "Privado" = "0",
+                           "NS/NC" = NA_character_)) %>% 
+  mutate(sectorpub = recode(sectorpub, 
+                           "Público" = "1",
+                           "Privado" = "0",
+                           "NS/NC" = NA_character_,
+                           "No aplica" = NA_character_)) %>% 
+  mutate(interes = recode(interes, 
+                           "Muy interesado" = "1",
+                           "Algo interesado" = "1",
+                           "Poco interesado" = "0",
+                          "Nada interesado" = "0",
+                           "Ns/Nc" = NA_character_)) %>% 
+  mutate(benefopor = recode(benefopor, 
+                           "Sí, Oportunidades" = "1",
+                           "Sí, Seguro Popular" = "1",
+                           "Sí, ambos" = "1",
+                           "No, ninguno" = "0",
+                           "NS/NC" = NA_character_)) %>% 
+  mutate(opepn = recode(opepn, 
+                           "Muy buena" = "1",
+                           "9" = "1", "8" = "1", "7" = "1",
+                           "6" = "1", "5" = "0", "4" = "0",
+                           "3" = "0", "2" = "0", "1" = "0",
+                           "Muy mala" = "0",
+                           "NS/NC" = NA_character_)) %>% 
+  mutate(opjosefina = recode(opjosefina, 
+                           "Muy buena" = "1",
+                           "9" = "1", "8" = "1", "7" = "1",
+                           "6" = "1", "5" = "0", "4" = "0",
+                           "3" = "0", "2" = "0", "1" = "0",
+                           "Muy mala" = "0",
+                           "NS/NC" = NA_character_)) %>% 
+  mutate(opamlo = recode(opamlo, 
+                           "Muy buena" = "1",
+                           "9" = "1", "8" = "1", "7" = "1",
+                           "6" = "1", "5" = "0", "4" = "0",
+                           "3" = "0", "2" = "0", "1" = "0",
+                           "Muy mala" = "0",
+                           "NS/NC" = NA_character_)) %>% 
+  mutate(opsaliente = recode(opsaliente, 
+                           "Muy buena" = "1",
+                           "9" = "1", "8" = "1", "7" = "1",
+                           "6" = "1", "5" = "0", "4" = "0",
+                           "3" = "0", "2" = "0", "1" = "0",
+                           "Muy mala" = "0",
+                           "NS/NC" = NA_character_)) %>%         
+  mutate_at(c("idpri","idpan", "idprd", "idotro", "idninguno",
+                  "idmorena"),
+            funs(replace_na(., 0)))
+```
+
+# Recodificar 2018
+
+```{r}
+base_recode_18 <-  subset18 %>% 
+  mutate(internet = recode(internet, 
+                           "Sí" = "1",
+                           "No" = "0",
+                           "NS/NC" = NA_character_)) %>% 
+  mutate(sexo = recode(sexo, 
+                           "Femenino" = "1",
+                           "Masculino" = "0",
+                           "NS/NC" = NA_character_)) %>% 
+  mutate(educ = recode(educ, 
+                        "Ninguno" = "0",
+                        "Primaria terminada" = "1",
+                        "Primaria incompleta" = "1",
+                        "Secundaria no terminada" = "2",
+                        "Secundaria terminada"= "2",
+                        "Preparatoria o equivalente" = "3",
+                        "Universidad sin terminar" = "4",
+                        "Universidad terminada" = "4", 
+                        "Posgrado" = "4",
+                        "NS/NC" = NA_character_)) %>% 
+  mutate(votop = recode(votop, 
+                    "Ricardo Anaya/ PAN-PRD-MC" = "1",
+                    "Andrés Manuel López Obrador/ PT-MORENA-PES" = "2",
+                    "José Antonio Meade/ PRI-PVEM-PANAL" = "3",
+                    "Jaime Rodríguez \"El Bronco\"/ Independiente" = "4")) %>%         
+  mutate_at(c("crimen","economia", "pobreza", "corrupcion"),
+            funs(recode(., "Muy bien"= 1, 
+                           "Bien"= 1, 
+                           "Regular" = 0,
+                           "Mal" = 0,
+                           "Muy mal" = 0)))  %>% 
+  mutate(aprueba = recode(aprueba, 
+                           "Aprueba totalmente" = "1",
+                          "Aprueba algo" = "1",
+                           "Desaprueba totalmente" = "0",
+                          "Desaprueba algo" = "0",
+                           "NS" = NA_character_, 
+                          "NC" = NA_character_)) %>% 
+  mutate_at(c("infointernet","infoperiodicos", "inforadio", "infotv", "inforedes"),
+            funs(recode(.,"Nunca" = "0",
+                          "Todos los días o casi todos los días" = "1",
+                          "Uno o dos días por semana" = "1",
+                          "Tres o cuatro días por semana" = "1",
+                          "Con menor frecuencia" = "0",
+                           "NS/NC" = NA_character_)))  %>% 
+  mutate(idpri = idpartido == "Muy priista" |
+                  idpartido == "Algo priista"|
+                  inclinapart == "PRI", 
+         idpan = idpartido == "Muy panista" |
+                  idpartido == "Algo panista"|
+                  inclinapart == "PAN",
+         idprd = idpartido == "Muy perredista" |
+                  idpartido == "Algo perredista"|
+                  inclinapart == "PRD",
+         idotro = idpartido == "Otro" |
+                  inclinapart == "Otro",
+         idninguno = idpartido == "Ninguno" |
+                  inclinapart == "Ninguno",
+         idmorena = idpartido == "Muy morenistas" |
+                  idpartido == "Algo morenista"|
+                  inclinapart == "Morena")  %>%         
+      mutate_at(c("idpri","idpan", "idprd", "idotro", "idninguno",
+                  "idmorena"),
+            funs(as.numeric)) %>% 
+  mutate(jefehog = recode(jefehog, 
+                           "Público" = "1",
+                           "Privado" = "0",
+                           "NS/NC" = NA_character_)) %>% 
+  mutate(sectorpub = recode(sectorpub, 
+                           "Público" = "1",
+                           "Privado" = "0",
+                           "NS/NC" = NA_character_,
+                           "No aplica" = NA_character_)) %>% 
+  mutate(interes = recode(interes, 
+                           "Muy interesado" = "1",
+                           "Algo interesado" = "1",
+                           "Poco interesado" = "0",
+                          "Nada interesado" = "0",
+                           "NS/NC" = NA_character_)) %>% 
+  mutate(benefopor = recode(benefopor, 
+                           "Sí, Oportunidades" = "1",
+                           "Sí, Seguro Popular" = "1",
+                           "Sí, ambos" = "1",
+                           "No, ninguno" = "0",
+                           "NS/NC" = NA_character_)) %>% 
+  mutate(opepn = recode(opepn, 
+                           "Muy buena" = "1",
+                           "9" = "1", "8" = "1", "7" = "1",
+                           "6" = "1", "5" = "0", "4" = "0",
+                           "3" = "0", "2" = "0", "1" = "0",
+                           "Muy mala" = "0",
+                           "NS/NC" = NA_character_)) %>% 
+  mutate(opanaya = recode(opanaya, 
+                           "Muy buena" = "1",
+                           "9" = "1", "8" = "1", "7" = "1",
+                           "6" = "1", "5" = "0", "4" = "0",
+                           "3" = "0", "2" = "0", "1" = "0",
+                           "Muy mala" = "0",
+                           "NS/NC" = NA_character_)) %>% 
+  mutate(opamlo = recode(opamlo, 
+                           "Muy buena" = "1",
+                           "9" = "1", "8" = "1", "7" = "1",
+                           "6" = "1", "5" = "0", "4" = "0",
+                           "3" = "0", "2" = "0", "1" = "0",
+                           "Muy mala" = "0",
+                           "NS/NC" = NA_character_)) %>% 
+  mutate(opmeade = recode(opmeade, 
+                           "Muy buena" = "1",
+                           "9" = "1", "8" = "1", "7" = "1",
+                           "6" = "1", "5" = "0", "4" = "0",
+                           "3" = "0", "2" = "0", "1" = "0",
+                           "Muy mala" = "0",
+                           "NS/NC" = NA_character_)) %>% 
+  mutate(opsaliente = recode(opsaliente, 
+                           "Muy buena" = "1",
+                           "9" = "1", "8" = "1", "7" = "1",
+                           "6" = "1", "5" = "0", "4" = "0",
+                           "3" = "0", "2" = "0", "1" = "0",
+                           "Muy mala" = "0",
+                           "NS/NC" = NA_character_)) %>%         
+  mutate_at(c("idpri","idpan", "idprd", "idotro", "idninguno",
+                  "idmorena"),
+            funs(replace_na(., 0)))
+```
+
+# Variables dependientes
+
+
+```{r}
+# Voto Castigo
+
+base_recode_12 <- base_recode_12 %>% 
+  mutate(votocastigo = votop != 1,
+         votocastigo_condicional = votop != 1 &
+                                   idpan ==1) %>% 
+  mutate(votocastigo = as.numeric(votocastigo),
+         votocastigo_condicional = as.numeric(votocastigo_condicional)) %>% 
+  mutate(votocastigo_condicional = ifelse(is.na(inclinapart), NA, votocastigo_condicional)) %>% 
+  mutate(votpos = votocastigo == 1 &  opjosefina == 1) %>% 
+  mutate(votpos = as.numeric(votpos)) %>% 
+  mutate(sofvariable = jefehog == 1 & sectorpub ==1)
+
+
+# Voto castigo condsicional
+
+base_recode_18 <- base_recode_18 %>% 
+  mutate(votocastigo = votop != 3,
+         votocastigo_condicional = votop != 3 &
+                                   idpri ==1)  %>% 
+  mutate(votocastigo = as.numeric(votocastigo),
+         votocastigo_condicional = as.numeric(votocastigo_condicional)) %>% 
+  mutate(votocastigo_condicional = ifelse(is.na(inclinapart), NA, votocastigo_condicional)) %>% 
+  mutate(votpos = votocastigo == 1 &  opmeade == 1) %>% 
+  mutate(votpos = as.numeric(votpos))  %>% 
+  mutate(sofvariable = jefehog == 1 & sectorpub ==1)
+```
+
+
+# Análisis
+
+## Variables dependientes
+
+### 2012 - Voto de castigo
+
+```{r,}
+base_recode_12 %>% 
+  select(votocastigo) %>% 
+  group_by(votocastigo) %>% 
+  summarise(freq=n()) %>% 
+  mutate(`Prop sin NAs` = round(100*(freq/(226+ 1043)),1),
+         `Prop con NAs` = round(100*(freq/(226+ 1043 + 331)),1)) %>% 
+  mutate(`Prop sin NAs` = ifelse(is.na(votocastigo), NA, `Prop sin NAs`)) %>% 
+  kable()
+
+
+base_recode_12 %>% 
+  select(votocastigo) %>% 
+  group_by(votocastigo) %>% 
+  summarise(freq=n()) %>% 
+  mutate(`Prop sin NAs` = freq/(226+1043),
+         `Prop con NAs` = freq/(226+ 1043 + 331)) %>% 
+  mutate(`Prop sin NAs` = ifelse(is.na(votocastigo), NA, `Prop sin NAs`))%>% 
+  na.omit() %>% 
+  ggplot(aes(x =as.factor(votocastigo), y= `Prop sin NAs`,
+           label=paste(round(`Prop sin NAs`*100,1), "%"),
+           fill=as.factor(votocastigo))) +
+  geom_col() +
+  geom_text(vjust=-1) +
+  labs(y="Observaciones",x="¿Voto de castigo?",
+       title="Voto de castigo 2012") +
+  theme_minimal() +
+  guides(fill=FALSE) +
+  scale_y_continuous(labels = scales::percent_format(accuracy = 1), limits=c(0,1)) +
+  scale_x_discrete(labels =c("Sí", "No")) 
+```
+
+### 2018 - Voto de castigo
+
+```{r,}
+base_recode_18 %>% 
+  select(votocastigo) %>% 
+  group_by(votocastigo) %>% 
+  summarise(freq=n()) %>% 
+  mutate(`Prop sin NAs` = round(100*(freq/(128+904)),1),
+         `Prop con NAs` = round(100*(freq/(128+904 + 396)),1)) %>% 
+  mutate(`Prop sin NAs` = ifelse(is.na(votocastigo), NA, `Prop sin NAs`)) %>% 
+  kable()
+
+
+base_recode_18 %>% 
+  select(votocastigo) %>% 
+  group_by(votocastigo) %>% 
+  summarise(freq=n()) %>% 
+  mutate(`Prop sin NAs` = freq/(128+904),
+         `Prop con NAs` = freq/(128+904 + 396)) %>% 
+  mutate(`Prop sin NAs` = ifelse(is.na(votocastigo), NA, `Prop sin NAs`))%>% 
+  na.omit() %>% 
+  ggplot(aes(x =as.factor(votocastigo), y= `Prop sin NAs`,
+           label=paste(round(`Prop sin NAs`*100,1), "%"),
+           fill=as.factor(votocastigo))) +
+  geom_col() +
+  geom_text(vjust=-1) +
+  labs(y="Observaciones",x="¿Voto de castigo?",
+       title="Voto de castigo 2012") +
+  theme_minimal() +
+  guides(fill=FALSE) +
+  scale_y_continuous(labels = scales::percent_format(accuracy = 1), limits=c(0,1)) +
+  scale_x_discrete(labels =c("Sí", "No"))
+```
+
+
+
+
+# Correlograma
+
+```{r}
+base_recode_12 <- 
+  base_recode_12  %>%
+  mutate_if(sapply(., is.factor), as.character) %>% 
+  mutate_if(sapply(., is.character), as.numeric)
+
+
+base_recode_18 <- 
+  base_recode_18  %>%
+  mutate_if(sapply(., is.factor), as.character) %>% 
+  mutate_if(sapply(., is.character), as.numeric)
+```
+
+## 2012
+
+### Selección
+
+## 2012
+
+```{r}
+matriz12 <- base_recode_12 %>% 
+              select(crimen, economia, pobreza, corrupcion,
+                     aprueba, opsaliente, votocastigo) %>% 
+                      replace(., is.na(.), 0)
+corr <- round(cor(matriz12), 1)
+
+
+ggcorrplot(corr, hc.order = FALSE, type = "lower",
+   lab = TRUE, 
+   colors = c("red", "white", "blue"))
+
+ggsave("corrselect12.png")
+```
+
+## 2018
+
+```{r, include=FALSE}
+matriz18 <- base_recode_18 %>% 
+              select(crimen, economia, pobreza, corrupcion,
+                     aprueba, opsaliente, votocastigo) %>% 
+                      replace(., is.na(.), 0)
+corr <- round(cor(matriz12), 1)
+
+
+ggcorrplot(corr, hc.order = FALSE, type = "lower",
+   lab = TRUE, 
+   colors = c("red", "white", "blue"))
+
+ggsave("corrselect18.png")
+```
+
+
+### Completo 12
+
+```{r, fig.width=15, fig.height=15}
+cols <- c("id", "yr", "votocastigo_condicional", "votpos",
+          "sofvariable", "jefehog", "sectorpub", "interes", "inclinapart", "idpartido", "internet", "ent", "votop")
+matriz12 <- base_recode_12 %>% 
+              select(-one_of(cols)) %>% 
+                      replace(., is.na(.), 0)
+corr <- round(cor(matriz12), 1)
+
+
+ggcorrplot(corr, hc.order = FALSE, type = "lower",
+   lab = FALSE, 
+   colors = c("red", "white", "blue"),
+   ggtheme = ggplot2::theme_minimal) +
+  labs(title="Correlograma base 2012")
+
+ggsave("corr12.png")
+```
+
+
+### Completo 12 - versión b
+```{r, fig.width=15, include=FALSE, eval=FALSE}
+png("corr12b.png", width = 1200, height = 600, units = "px")
+
+library(corrgram)
+corrgram(base_recode_12, order=NULL, lower.panel=panel.shade,
+  upper.panel=NULL, text.panel=panel.txt,
+  main="Correlograma base 2012")
+
+dev.off()
+
+corrgram(base_recode_12, order=NULL, lower.panel=panel.shade,
+  upper.panel=NULL, text.panel=panel.txt,
+  main="Correlograma base 2012")
+```
+
+## 2018
+
+```{r, fig.width=15, fig.height=15}
+cols <- c("id", "yr", "votocastigo_condicional", "votpos",
+          "sofvariable", "jefehog", "sectorpub", "interes", "inclinapart", "idpartido", "internet", "ent", "votop")
+matriz12 <- base_recode_18 %>% 
+              select(-one_of(cols)) %>% 
+                      replace(., is.na(.), 0)
+corr <- round(cor(matriz12), 1)
+
+
+ggcorrplot(corr, hc.order = FALSE, type = "lower",
+   lab = FALSE, 
+   colors = c("red", "white", "blue"),
+   ggtheme = ggplot2::theme_minimal) +
+  labs(title="Correlograma base 2018")
+
+ggsave("corr18.png")
+```
+
+```{r, fig.width=15, eval=FALSE, include=FALSE}
+png("corr18b.png", width = 1200, height = 600, units = "px")
+
+corrgram(base_recode_12, order=NULL, lower.panel=panel.shade,
+  upper.panel=NULL, text.panel=panel.txt,
+  main="Correlograma base 2018")
+
+dev.off()
+
+corrgram(base_recode_12, order=NULL, lower.panel=panel.shade,
+  upper.panel=NULL, text.panel=panel.txt,
+  main="Correlograma base 2018")
+```
+
+# Identificación partidista
+
+# 2012
+
+```{r}
+base_recode_12 %>% 
+  select(idprd, idpri, idpan, idninguno, idotro) %>%
+  gather(variables, value) %>%
+  count(variables, value) %>% 
+  group_by(variables) %>% 
+  mutate(prop = prop.table(n)) %>% 
+  ungroup() %>% 
+  unite(temp, n, prop) %>%
+  spread(value, temp) %>% 
+  separate(`0`,c("Frecuencia No", "Proporción No"), sep="_") %>% 
+  separate(`1`,c("Frecuencia Sí", "Proporción Sí"), sep="_") %>% 
+  mutate(`Proporción No` = 
+           paste(round(as.numeric(`Proporción No`)*100,1),"%", sep="")) %>%  mutate(`Proporción Sí` = 
+           paste(round(as.numeric(`Proporción Sí`)*100,1),"%", sep="")) %>%
+ rename(partido = variables) %>% 
+ mutate(partido = toupper(partido)) %>% 
+ mutate(partido = gsub("ID", "", partido)) %>% 
+  kable()
+```
+
+# 2018
+```{r}
+base_recode_18 %>% 
+  select(idprd, idpri, idpan, idmorena, idotro, idninguno) %>%
+  gather(variables, value) %>%
+  count(variables, value) %>% 
+  group_by(variables) %>% 
+  mutate(prop = prop.table(n)) %>% 
+  ungroup() %>% 
+  unite(temp, n, prop) %>%
+  spread(value, temp) %>% 
+  separate(`0`,c("Frecuencia No", "Proporción No"), sep="_") %>% 
+  separate(`1`,c("Frecuencia Sí", "Proporción Sí"), sep="_") %>% 
+  mutate(`Proporción No` = 
+           paste(round(as.numeric(`Proporción No`)*100,1),"%", sep="")) %>%  mutate(`Proporción Sí` = 
+           paste(round(as.numeric(`Proporción Sí`)*100,1),"%", sep="")) %>%
+ rename(partido = variables) %>% 
+ mutate(partido = toupper(partido)) %>% 
+ mutate(partido = gsub("ID", "", partido)) %>% 
+  kable()
+```
+
+
+# Comparación presidentes
+
+```{r}
+library(ggridges)
+cal12 <- d12 %>% 
+          select(Var1 = p97e) %>% 
+          mutate(presidente = "FCH 2012") %>% 
+          mutate(ord = 1)
+epn12 <- d12 %>% 
+          select(Var1 = p97b) %>% 
+          mutate(presidente = "EPN 2012") %>% 
+          mutate(ord = 2)
+epn18 <- d18 %>% 
+        select(Var1 = p112a)%>% 
+          mutate(presidente = "EPN 2018") %>% 
+          mutate(ord = 3)
+
+presidentes <- rbind(cal12, epn12, epn18) %>%
+     mutate(Var1 = gsub("Muy buena", "10", Var1)) %>% 
+    mutate(Var1 = gsub("Muy mala", "0", Var1)) %>% 
+    filter(Var1 != "NS/NC") %>% 
+    mutate(Var1 = as.numeric(Var1))
+
+ggplot(presidentes, 
+       aes(x = as.numeric(Var1), y = reorder(presidente, -ord),
+           fill=presidente)) + 
+  geom_density_ridges() +
+  labs(title= "Distribución de calificaciones por presidente",
+       y="Presidente", x="Calificación") +
+  scale_x_continuous(breaks = seq(0,10,1),labels= seq(0,10,1)) +
+  guides(fill=FALSE) +
+  scale_fill_manual(values=c("red", "firebrick", "blue")) +
+  theme_ridges()
+
+ggsave("ridges.png")
+```
+
+
+
+# Gráficas descriptivas
+
+```{r}
+library(reshape2)
+melt.br12 <-  melt(base_recode_12)
+melt.br18 <-  melt(base_recode_18)
+```
+
+```{r, fig.height=20, fig.width=20}
+ggplot(data = melt.br12, aes(x = value, fill=variable)) + 
+geom_bar() + 
+facet_wrap(~variable, scales = "free") +
+  guides(fill=FALSE)
+
+ggsave("desc12.png", width = 20, height = 20)
+```
+
+```{r, fig.height=20, fig.width=20}
+ggplot(data = melt.br18, aes(x = value, fill=variable)) + 
+geom_bar() + 
+facet_wrap(~variable, scales = "free")+
+  guides(fill=FALSE)
+
+ggsave("desc18.png", width = 20, height = 20)
+```
+
+# Summaries
+## 2012
+
+```{r}
+pander(summary(base_recode_12))
+```
+
+## 2018
+
+```{r}
+pander(summary(base_recode_18))
+```
+
+
+
+
+
+---------------------------------------
+
+
+
+
+
+# Modelos de regresión
+
+## 2012
+
+```{r}
+# Modelo base "a"
+mba.12 <- glm(votocastigo ~ edad + sexo + educ + corrupcion, 
+          family = binomial(link = "probit"), 
+          data = base_recode_12)
+
+# Model base "b"
+  mbb.12 <- glm(votocastigo ~ edad + sexo + educ + 
+            corrupcion + economia + opsaliente,    
+                family = binomial(link = "probit"), 
+                data = base_recode_12)
+
+# Modelo temas
+m1.12 <- glm(votocastigo ~ edad + sexo + educ + 
+            corrupcion+
+            opepn + opjosefina + opamlo, 
+            family = binomial(link = "probit"), 
+            data = base_recode_12)
+
+# Modelo identidad
+
+m2.12 <- glm(votocastigo ~ edad + sexo + educ +
+               corrupcion +
+            idpri + idpan + idmorena + idprd, 
+            family = binomial(link = "probit"), 
+            data = base_recode_12)
+
+# Modelo medios
+
+m3.12 <- glm(votocastigo ~ edad + sexo + educ + 
+               corrupcion + 
+      infointernet + infoperiodicos + inforadio + infotv + inforedes, 
+            family = binomial(link = "probit"), 
+            data = base_recode_12)
+
+# Modelo completo
+
+mcomp.12 <- glm(votocastigo ~ edad + sexo + educ + corrupcion + 
+            economia +  opsaliente +
+            infointernet + infoperiodicos + inforadio + 
+            infotv + inforedes+ 
+            idpri +  idpan + idprd +
+            opepn + opjosefina + opamlo, 
+            family = binomial(link = "probit"), 
+            data = base_recode_12)
+
+```
+
+```{r, results = "asis"}
+stargazer(mba.12, mbb.12, m1.12, m2.12, m3.12, mcomp.12, type = "latex" , out="probit1.htm", stye="qje", no.space=TRUE)
+```
+
+# Risk Ratio 12
+
+```{r, results = "asis"}
+rr.a.12= exp(coef(mba.12))
+rr.b.12= exp(coef(mbb.12))
+rr.1.12= exp(coef(m1.12))
+rr.2.12= exp(coef(m2.12))
+rr.3.12= exp(coef(m3.12))
+rr.comp.12= exp(coef(mcomp.12))
+
+
+stargazer(mba.12, mbb.12, m1.12, m2.12, m3.12, mcomp.12, type = "latex", out="logitor12.htm", p.auto = FALSE,
+          coef=list(rr.a.12, rr.b.12, rr.1.12, rr.2.12, 
+                    rr.3.12, rr.comp.12), no.space=TRUE)
+
+```
+
+
+
+
+## 2018
+
+```{r}
+# Modelo base "a"
+mba.18 <- glm(votocastigo ~ edad + sexo + educ + corrupcion,
+          family = binomial(link = "probit"), 
+          data = base_recode_18)
+
+# Modelo base "b"
+mbb.18 <- glm(votocastigo ~ edad + sexo + educ + 
+            corrupcion + economia + opsaliente,    
+                family = binomial(link = "probit"), 
+                data = base_recode_18)
+
+# Modelo temas
+m1.18 <- glm(votocastigo ~ edad + sexo + educ + 
+            corrupcion +
+            opmeade + opanaya + opamlo, 
+            family = binomial(link = "probit"), 
+            data = base_recode_18)
+
+# Modelo identidad
+
+m2.18 <- glm(votocastigo ~ edad + sexo + educ + 
+               corrupcion +
+            idpri + idpan + idmorena + idprd, 
+            family = binomial(link = "probit"), 
+            data = base_recode_18)
+
+# Modelo medios
+
+m3.18 <- glm(votocastigo ~ edad + sexo + educ + 
+               corrupcion + 
+      infointernet + infoperiodicos + inforadio + infotv + inforedes, 
+            family = binomial(link = "probit"), 
+            data = base_recode_18)
+
+# Modelo completo
+
+mcomp.18 <- glm(votocastigo ~ edad + sexo + educ + corrupcion + 
+            economia +  opsaliente +
+            infointernet + infoperiodicos + inforadio + 
+            infotv + inforedes+ 
+            idpri +  idpan + idprd + idmorena +
+            opmeade + opanaya + opamlo, 
+            family = binomial(link = "probit"), 
+            data = base_recode_18)
+
+```
+
+```{r, results = "asis"}
+stargazer(mba.18, mbb.18, m1.18, m2.18, m3.18, mcomp.18, type = "latex", out="probit2.htm", stye="qje", no.space=TRUE)
+```
+
+
+
+# Risk Ratio 18
+
+```{r, ,results = "asis"}
+rr.a.18= exp(coef(mba.18))
+rr.b.18= exp(coef(mbb.18))
+rr.1.18= exp(coef(m1.18))
+rr.2.18= exp(coef(m2.18))
+rr.3.18= exp(coef(m3.18))
+rr.comp.18= exp(coef(mcomp.18))
+
+
+stargazer(mba.18, mbb.18, m1.18, m2.18, m3.18, mcomp.18, type = "latex", out="logitor18.htm", p.auto = FALSE,
+          coef=list(rr.a.18, rr.b.18, rr.1.18, rr.2.18, 
+                    rr.3.18, rr.comp.18), no.space=TRUE)
+
+```

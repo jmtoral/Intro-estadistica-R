@@ -1,8 +1,7 @@
-"0","police %>%
-  select(county_id, name, county_income) %>% 
-  summary() %>% 
-  pander()
-"
+"0","police %>%"
+"0","  select(county_id, name, county_income) %>% "
+"0","  summary() %>% "
+"0","  pander()"
 "1","
 ---------------------------------------------------
    county_id           name         county_income  
@@ -21,3 +20,7 @@
 ---------------------------------------------------
 
 "
+"0","police %>%"
+"0","  select(county_id, name, county_income) %>% "
+"0","  summary() %>% "
+"0","  write.csv(""tabla.csv"")"

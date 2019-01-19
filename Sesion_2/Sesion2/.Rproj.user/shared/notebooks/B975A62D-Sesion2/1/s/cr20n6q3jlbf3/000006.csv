@@ -1,5 +1,0 @@
-"0","police %>% "
-"0","  filter(raceethnicity == ""Hispanic/Latino"") %>% "
-"0","  filter(armed == ""Firearm"" | "
-"0","         armed == ""Vehicle"") %>% "
-"0","  select(raceethnicity, armed)"

@@ -3,8 +3,8 @@ title: "Sesion 2"
 author: "Manuel Toral"
 date: "January 19, 2019"
 output:
-  html_document: default
   pdf_document: default
+  html_document: default
   word_document: default
 ---
 
@@ -24,6 +24,7 @@ library(readstata13) #STATA13 +
 library(readr) #CSV
 library(readxl) #EXCEL
 #library(RODBC)
+library(stargazer)
 ```
 
 
@@ -34,11 +35,6 @@ library(readxl) #EXCEL
 police <- read_csv("police.csv")
 ```
 
-# Explorar
-
-```{r}
-pander(summary(police))
-```
 
 
 
@@ -58,14 +54,6 @@ police %>%
 
 
 ## Filter
-
-```{r}
-police %>% 
-  filter(raceethnicity == "Hispanic/Latino" &
-         armed == "Firearm" | 
-         armed == "Vehicle") %>% 
-  pander()
-```
 
 ## Filter + Select
 
@@ -111,6 +99,83 @@ police %>%
 
 
 
+# Regresión
+
+```{r}
+police %>% 
+  group_by(state, county_id, county_income) %>% 
+  summarise(count = n(),
+            pop = sum(pop, na.rm =  TRUE)) %>% 
+  ungroup() %>% 
+  mutate(tasa = (count/pop)*100000) %>% 
+  arrange(-tasa) %>% 
+  filter(pop > 0) %>% #OJO
+ggplot(aes(county_income, tasa)) +
+  geom_point() +
+  geom_smooth(method = "lm")
+
+```
+
+
+$$Y = \beta_1 X_1 + \epsilon$$
+
+$$\text{Tasa por cada cien mil hab.}_i = \beta_1 \text{Ingreso}_1 + \epsilon $$
+
+## Modelo 1
+
+```{r}
+police %>% 
+  group_by(state, county_id, county_income) %>% 
+  summarise(count = n(),
+            pop = sum(pop, na.rm =  TRUE)) %>% 
+  ungroup() %>% 
+  mutate(tasa = (count/pop)*100000) %>% 
+  arrange(-tasa) %>% 
+  filter(pop > 0) -> police.tasa
+
+
+modelo1 <- lm(tasa ~ county_income, data=police.tasa)
+
+pander(summary(modelo1))
+```
+
+```{r, results="asis"}
+stargazer(modelo1)
+```
+
+
+
+## Modelo 2
+
+```{r}
+police %>% 
+  group_by(state, county_id, county_income) %>% 
+  summarise(count = n(),
+            pop = sum(pop, na.rm =  TRUE)) %>% 
+  ungroup() %>% 
+  mutate(tasa = (count/pop)*100000) %>% 
+  mutate(incpp = county_income/pop) %>% 
+  arrange(-tasa) %>% 
+  filter(pop > 0) -> police.inc
+
+
+modelo2 <- lm(tasa ~ incpp, data=police.inc)
+
+#pander(summary(modelo2))
+```
+
+```{r, results="asis"}
+stargazer(modelo1, modelo2, type="html")
+```
+
+## Gráfica Modelo 2
+
+```{r}
+ggplot(data = police.inc, 
+       mapping = aes(tasa, incpp)) +
+  geom_point() +
+  geom_smooth(method = "lm")
+```
 
 
 
@@ -120,4 +185,33 @@ police %>%
 
 
 
+
+## Modelo 3
+
+$$ Y = \beta_1 X_1 + \beta_2 X_2 + \epsilon $$
+
+$$\text{Tasa por cada cien mil hab.}_i = \beta_1 \text{Ingreso}_i +
+\beta_2 \text{Porcentaje de gente blanca}_i + \epsilon $$
+
+```{r}
+police %>% 
+  group_by(state, county_id, county_income) %>% 
+  summarise(count = n(),
+            pop = sum(pop, na.rm =  TRUE),
+            pctwhite = mean(share_white, na.rm = TRUE)) %>% 
+  ungroup() %>% 
+  mutate(tasa = (count/pop)*100000) %>% 
+  mutate(incpp = county_income/pop) %>% 
+  arrange(-tasa) %>% 
+  filter(pop > 0) -> police.white
+
+
+modelo3 <- lm(tasa ~ incpp + pctwhite, data=police.white)
+
+#pander(summary(modelo2))
+```
+
+```{r, results="asis"}
+stargazer(modelo1, modelo2, modelo3)
+```
 

@@ -1,0 +1,29 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1547921773196.000,
+    "dirty" : false,
+    "encoding" : "",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "BB3A4A4B",
+    "lastKnownWriteTime" : 1547921006,
+    "last_content_update" : 1547921773196,
+    "path" : null,
+    "project_path" : null,
+    "properties" : {
+        "cacheKey" : "3C90E9B7",
+        "caption" : "police.tasa",
+        "contentUrl" : "grid_resource/gridviewer.html?env=&obj=police.tasa&cache_key=3C90E9B7",
+        "displayedObservations" : 301,
+        "environment" : "",
+        "object" : "police.tasa",
+        "preview" : 0,
+        "totalObservations" : 301,
+        "variables" : 6
+    },
+    "relative_order" : 3,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_dataframe"
+}
